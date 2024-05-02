@@ -2,7 +2,9 @@
 
 A Stack Diagram Tool Kit for Figjam
 
----
+
+
+
 
 1) NPM Install
 2) Run "Terminal > Run Build Task..."
