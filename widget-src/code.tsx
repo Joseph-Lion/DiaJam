@@ -52,6 +52,7 @@ function PropertyMenuWidget() {
 		{ option: "theme", label: "Theme" },
 		{ option: "third-party", label: "Third Party" },
 		{ option: "tool", label: "Tool" },
+		{ option: "user", label: "User" },
 		{ option: "user-area", label: "User Area" },
 	];
 
@@ -119,6 +120,7 @@ function PropertyMenuWidget() {
 					{ option: "#B0DAD8", tooltip: "Ocean" },
 					{ option: "#FFA8CB", tooltip: "Fuchsia" },
 					{ option: "#BD90F9", tooltip: "Cadburys" },
+					{ option: "#F5F5F5", tooltip: "Inner Grey"},
 				],
 			},
 			{
