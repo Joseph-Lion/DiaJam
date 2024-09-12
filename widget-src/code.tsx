@@ -1,28 +1,39 @@
 const { widget } = figma;
-const { useSyncedState, usePropertyMenu, AutoLayout, Text, Input, Ellipse } =
-	widget;
+const { useSyncedState, usePropertyMenu, AutoLayout, Text, Input, Ellipse } = widget;
 
 const blockHeight = 240;
 const blockWidth = 288;
 const roundCorners = 8;
-
-let fillColor = "#ffffff";
-let strokeColor = "#cccccc";
-let titlecolor = "#757575";
-let textcolor = "#B3B3B3";
 const ghostStroke = 2;
-const ghostcolor = "#F5F5F5";
+
+let  strokeColor = "#cccccc";
+
+export const lightModeColors = {
+    fillColor: "#ffffff",
+    titleColor: "#757575",
+    textColor: "#B3B3B3",
+    ghostColor: "#F5F5F5"
+};
+
+export const darkModeColors = {
+    fillColor: "#1C1C1C",
+    titleColor: "#e0e0e0",
+    textColor: "#888888",
+    ghostColor: "#282828"
+};
+
+const sunIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24" fill="none" stroke="#CCCCCC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+const moonIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="19px" height="19px" viewBox="0 0 24 24" fill="none" stroke="#CCCCCC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>';
+
 
 function PropertyMenuWidget() {
-	const [color, setColor] = useSyncedState("theme", "#FB6543");
-	const [strokeColor, setStrokeColor] = useSyncedState(
-		"strokeColor",
-		"#cccccc"
-	);
-	const [type, settype] = useSyncedState("type", "server");
-	const [eventType, setEventType] = useSyncedState("eventType", "9x6");
+    const [color, setColor] = useSyncedState("theme", "#FB6543");
+    const [strokeColor, setStrokeColor] = useSyncedState("strokeColor", "#cccccc");
+    const [type, setType] = useSyncedState("type", "server");
+    const [eventType, setEventType] = useSyncedState("eventType", "9x6");
+    const [isDarkMode, setIsDarkMode] = useSyncedState("isDarkMode", false);
 
-	const typeOptions = [
+    const typeOptions = [
 		{ option: "blank", label: "" },
 		{ option: "admin", label: "Admin" },
 		{ option: "api", label: "API" },
@@ -74,13 +85,22 @@ function PropertyMenuWidget() {
 
 	const [title, setTitle] = useSyncedState("title", "");
 	const [description, setDescription] = useSyncedState("description", "");
+	const colors = isDarkMode ? darkModeColors : lightModeColors;
 
 	usePropertyMenu(
 		[
+            {
+                itemType: 'action',
+                tooltip: `Switch to ${isDarkMode ? 'Light' : 'Dark'} Mode`,
+                propertyName: 'toggleTheme',
+                icon: isDarkMode ? moonIcon : sunIcon,
+            },	{
+				itemType: "separator",
+			},
 			{
 				itemType: "color-selector",
 				propertyName: "colors",
-				tooltip: "Color selector",
+				tooltip: "Accent Colour",
 				selectedOption: color,
 				options: [
 					{ option: "#CCCCCC", tooltip: "Mid Grey" },
@@ -104,7 +124,7 @@ function PropertyMenuWidget() {
 			{
 				itemType: "color-selector",
 				propertyName: "strokeColors",
-				tooltip: "Fill selector",
+				tooltip: "Stroke Colour",
 				selectedOption: strokeColor,
 				options: [
 					{ option: "#CCCCCC", tooltip: "Mid Grey" },
@@ -121,6 +141,7 @@ function PropertyMenuWidget() {
 					{ option: "#FFA8CB", tooltip: "Fuchsia" },
 					{ option: "#BD90F9", tooltip: "Cadburys" },
 					{ option: "#F5F5F5", tooltip: "Inner Grey"},
+					{ option: "#2D2D2D", tooltip: "Dark"},
 				],
 			},
 			{
@@ -129,7 +150,7 @@ function PropertyMenuWidget() {
 			{
 				itemType: "dropdown",
 				propertyName: "eventTypes",
-				tooltip: "eventType selector",
+				tooltip: "Block Size",
 				selectedOption: eventType,
 				options: eventTypeOptions,
 			},
@@ -139,7 +160,7 @@ function PropertyMenuWidget() {
 			{
 				itemType: "dropdown",
 				propertyName: "types",
-				tooltip: "type selector",
+				tooltip: "Component",
 				selectedOption: type,
 				options: typeOptions,
 			},
@@ -177,7 +198,9 @@ function PropertyMenuWidget() {
 				setEventType(propertyValue);
 			} else if (propertyName === "action") {
 				console.log(propertyName);
-			}
+			} else if (propertyName === 'toggleTheme') {
+                setIsDarkMode(!isDarkMode);
+            }
 		}
 	);
 
@@ -188,7 +211,7 @@ function PropertyMenuWidget() {
 			cornerRadius={roundCorners}
 			strokeAlign="center"
 			direction="vertical"
-			fill={fillColor}>
+			fill={colors.fillColor}>
 			{eventType === "9x6" && (
 				<>
 					<AutoLayout
@@ -200,7 +223,7 @@ function PropertyMenuWidget() {
 							<AutoLayout // Segment Top Left Copy
 								width={blockWidth * 2}
 								height={blockHeight * 0.5}
-								fill={fillColor}
+								fill={colors.fillColor}
 								direction="vertical"
 								padding={blockHeight * 0.125}>
 								<Text fontSize={21} fill={color}>
@@ -211,7 +234,7 @@ function PropertyMenuWidget() {
 							<AutoLayout // Segment Top Left Copy
 								width={blockWidth * 2}
 								height={blockHeight * 0.5}
-								fill={fillColor}
+								fill={colors.fillColor}
 								direction="vertical"
 								padding={blockHeight * 0.1}>
 								<Text fontSize={24} fill={color}>
@@ -226,7 +249,7 @@ function PropertyMenuWidget() {
 										setTitle(e.characters);
 									}}
 									fontSize={40}
-									fill={titlecolor}
+									fill={colors.titleColor}
 									letterSpacing={-0.4}
 								/>
 							</AutoLayout>
@@ -235,8 +258,8 @@ function PropertyMenuWidget() {
 						<AutoLayout // Segment 2
 							width={blockWidth}
 							height={blockHeight}
-							stroke={ghostcolor}
-							fill={fillColor}
+							stroke={colors.ghostColor}
+							fill={colors.fillColor}
 							strokeWidth={ghostStroke}
 							strokeAlign="center"></AutoLayout>
 					</AutoLayout>
@@ -250,13 +273,13 @@ function PropertyMenuWidget() {
 						fontSize={24}
 						letterSpacing={-0.4}
 						lineHeight={35}
-						fill={textcolor}
+						fill={colors.textColor}
 						width={blockWidth * 3}
 						height={blockHeight}
 						padding={blockHeight * 0.125}
 						inputFrameProps={{
-							fill: fillColor,
-							stroke: ghostcolor,
+							fill: colors.fillColor,
+							stroke: colors.ghostColor,
 							strokeWidth: ghostStroke,
 							padding: 26,
 							strokeAlign: "center",
@@ -279,7 +302,7 @@ function PropertyMenuWidget() {
 							<AutoLayout // Segment Top Left Copy
 								width={blockWidth * 2}
 								height={blockHeight * 0.5}
-								fill={fillColor}
+								fill={colors.fillColor}
 								direction="vertical"
 								padding={blockHeight * 0.125}>
 								<Text fontSize={21} fill={color}>
@@ -290,7 +313,7 @@ function PropertyMenuWidget() {
 							<AutoLayout // Segment Top Left Copy
 								width={blockWidth * 2}
 								height={blockHeight * 0.5}
-								fill={fillColor}
+								fill={colors.fillColor}
 								direction="vertical"
 								padding={blockHeight * 0.1}>
 								<Text fontSize={24} fill={color}>
@@ -305,7 +328,7 @@ function PropertyMenuWidget() {
 										setTitle(e.characters);
 									}}
 									fontSize={40}
-									fill={titlecolor}
+									fill={colors.titleColor}
 									letterSpacing={-0.4}
 								/>
 							</AutoLayout>
@@ -314,8 +337,8 @@ function PropertyMenuWidget() {
 						<AutoLayout // Segment 2
 							width={blockWidth}
 							height={blockHeight}
-							stroke={ghostcolor}
-							fill={fillColor}
+							stroke={colors.ghostColor}
+							fill={colors.fillColor}
 							strokeWidth={ghostStroke}
 							strokeAlign="center"></AutoLayout>
 					</AutoLayout>
@@ -333,7 +356,7 @@ function PropertyMenuWidget() {
 							<AutoLayout // Segment Top Left Copy
 								width={blockWidth * 2}
 								height={blockHeight * 0.5}
-								fill={fillColor}
+								fill={colors.fillColor}
 								direction="vertical"
 								padding={blockHeight * 0.1}>
 								<Text fontSize={24} fill={color}>
@@ -348,7 +371,7 @@ function PropertyMenuWidget() {
 										setTitle(e.characters);
 									}}
 									fontSize={40}
-									fill={titlecolor}
+									fill={colors.titleColor}
 									letterSpacing={-0.4}
 								/>
 							</AutoLayout>
@@ -357,8 +380,8 @@ function PropertyMenuWidget() {
 						<AutoLayout // Segment 2
 							width={blockWidth}
 							height={blockHeight / 2}
-							stroke={ghostcolor}
-							fill={fillColor}
+							stroke={colors.ghostColor}
+							fill={colors.fillColor}
 							strokeWidth={ghostStroke}
 							strokeAlign="center"></AutoLayout>
 					</AutoLayout>
@@ -376,7 +399,7 @@ function PropertyMenuWidget() {
 							<AutoLayout // Segment Top Left Copy
 								width={blockWidth * 2}
 								height={blockHeight * 0.5}
-								fill={fillColor}
+								fill={colors.fillColor}
 								direction="vertical"
 								padding={blockHeight * 0.125}>
 								<Text fontSize={21} fill={color}>
@@ -387,7 +410,7 @@ function PropertyMenuWidget() {
 							<AutoLayout // Segment Top Left Copy
 								width={blockWidth * 2}
 								height={blockHeight * 0.5}
-								fill={fillColor}
+								fill={colors.fillColor}
 								direction="vertical"
 								padding={blockHeight * 0.1}>
 								<Text fontSize={24} fill={color}>
@@ -402,7 +425,7 @@ function PropertyMenuWidget() {
 										setTitle(e.characters);
 									}}
 									fontSize={40}
-									fill={titlecolor}
+									fill={colors.titleColor}
 									letterSpacing={-0.4}
 								/>
 							</AutoLayout>
@@ -418,13 +441,13 @@ function PropertyMenuWidget() {
 						fontSize={24}
 						letterSpacing={-0.4}
 						lineHeight={35}
-						fill={textcolor}
+						fill={colors.textColor}
 						width={blockWidth * 2}
 						height={blockHeight * 2}
 						padding={blockHeight * 0.125}
 						inputFrameProps={{
-							fill: fillColor,
-							stroke: ghostcolor,
+							fill: colors.fillColor,
+							stroke: colors.ghostColor,
 							strokeWidth: ghostStroke,
 							padding: 26,
 							strokeAlign: "center",
@@ -447,7 +470,7 @@ function PropertyMenuWidget() {
 							<AutoLayout // Segment Top Left Copy
 								width={blockWidth * 2}
 								height={blockHeight * 0.5}
-								fill={fillColor}
+								fill={colors.fillColor}
 								direction="vertical"
 								padding={blockHeight * 0.125}>
 								<Text fontSize={21} fill={color}>
@@ -458,7 +481,7 @@ function PropertyMenuWidget() {
 							<AutoLayout // Segment Top Left Copy
 								width={blockWidth * 2}
 								height={blockHeight * 0.5}
-								fill={fillColor}
+								fill={colors.fillColor}
 								direction="vertical"
 								padding={blockHeight * 0.1}>
 								<Text fontSize={24} fill={color}>
@@ -473,7 +496,7 @@ function PropertyMenuWidget() {
 										setTitle(e.characters);
 									}}
 									fontSize={40}
-									fill={titlecolor}
+									fill={colors.titleColor}
 									letterSpacing={-0.4}
 								/>
 							</AutoLayout>
@@ -489,14 +512,14 @@ function PropertyMenuWidget() {
 						fontSize={24}
 						letterSpacing={-0.4}
 						lineHeight={35}
-						fill={textcolor}
+						fill={colors.textColor}
 						width={blockWidth * 2}
 						height={blockHeight}
 						padding={blockHeight * 0.125}
 						inputFrameProps={{
-							fill: fillColor,
+							fill: colors.fillColor,
 
-							stroke: ghostcolor,
+							stroke: colors.ghostColor,
 							strokeWidth: ghostStroke,
 							padding: 26,
 							strokeAlign: "center",
@@ -543,7 +566,7 @@ function PropertyMenuWidget() {
 										setTitle(e.characters);
 									}}
 									fontSize={40}
-									fill={titlecolor}
+									fill={colors.titleColor}
 									letterSpacing={-0.4}
 								/>
 							</AutoLayout>
@@ -552,10 +575,10 @@ function PropertyMenuWidget() {
 						<AutoLayout // Segment 2
 							width={blockWidth}
 							height={blockHeight}
-							stroke={ghostcolor}
+							stroke={colors.ghostColor}
 							strokeWidth={ghostStroke}
 							strokeAlign="center"
-							fill={fillColor}></AutoLayout>
+							fill={colors.fillColor}></AutoLayout>
 					</AutoLayout>
 				</>
 			)}
@@ -595,7 +618,7 @@ function PropertyMenuWidget() {
 										setTitle(e.characters);
 									}}
 									fontSize={40}
-									fill={titlecolor}
+									fill={colors.titleColor}
 									letterSpacing={-0.4}
 								/>
 							</AutoLayout>
@@ -615,7 +638,7 @@ function PropertyMenuWidget() {
 							<AutoLayout // Segment Top Left Copy
 								width={blockWidth}
 								height={blockHeight * 0.5}
-								fill={fillColor}
+								fill={colors.fillColor}
 								direction="vertical"
 								padding={blockHeight * 0.1}>
 								<Text fontSize={24} fill={color}>
@@ -630,7 +653,7 @@ function PropertyMenuWidget() {
 										setTitle(e.characters);
 									}}
 									fontSize={40}
-									fill={titlecolor}
+									fill={colors.titleColor}
 									letterSpacing={-0.4}
 								/>
 							</AutoLayout>
@@ -639,8 +662,8 @@ function PropertyMenuWidget() {
 						<AutoLayout // Segment 2
 							width={blockWidth}
 							height={blockHeight / 2}
-							stroke={ghostcolor}
-							fill={fillColor}
+							stroke={colors.ghostColor}
+							fill={colors.fillColor}
 							strokeWidth={ghostStroke}
 							strokeAlign="center"></AutoLayout>
 					</AutoLayout>
@@ -658,7 +681,7 @@ function PropertyMenuWidget() {
 							<AutoLayout // Segment Top Left Copy
 								width={blockWidth * 2}
 								height={blockHeight * 0.5}
-								fill={fillColor}
+								fill={colors.fillColor}
 								direction="vertical"
 								padding={blockHeight * 0.1}>
 								<Text fontSize={24} fill={color}>
@@ -673,7 +696,7 @@ function PropertyMenuWidget() {
 										setTitle(e.characters);
 									}}
 									fontSize={40}
-									fill={titlecolor}
+									fill={colors.titleColor}
 									letterSpacing={-0.4}
 								/>
 							</AutoLayout>
@@ -693,7 +716,7 @@ function PropertyMenuWidget() {
 							<AutoLayout // Segment Top Left Copy
 								width={blockWidth}
 								height={blockHeight * 0.5}
-								fill={fillColor}
+								fill={colors.fillColor}
 								direction="vertical"
 								padding={blockHeight * 0.125}>
 								<Text fontSize={21} fill={color}>
@@ -704,7 +727,7 @@ function PropertyMenuWidget() {
 							<AutoLayout // Segment Top Left Copy
 								width={blockWidth}
 								height={blockHeight * 0.5}
-								fill={fillColor}
+								fill={colors.fillColor}
 								direction="vertical"
 								padding={blockHeight * 0.1}>
 								<Text fontSize={24} fill={color}>
@@ -719,7 +742,7 @@ function PropertyMenuWidget() {
 										setTitle(e.characters);
 									}}
 									fontSize={40}
-									fill={titlecolor}
+									fill={colors.titleColor}
 									letterSpacing={-0.4}
 								/>
 							</AutoLayout>
@@ -729,10 +752,10 @@ function PropertyMenuWidget() {
 					<AutoLayout // Segment 2
 						width={blockWidth}
 						height={blockHeight}
-						stroke={ghostcolor}
+						stroke={colors.ghostColor}
 						strokeWidth={ghostStroke}
 						strokeAlign="center"
-						fill={fillColor}></AutoLayout>
+						fill={colors.fillColor}></AutoLayout>
 				</>
 			)}
 
@@ -747,7 +770,7 @@ function PropertyMenuWidget() {
 							<AutoLayout // Segment Top Left Copy
 								width={blockWidth}
 								height={blockHeight * 0.5}
-								fill={fillColor}
+								fill={colors.fillColor}
 								direction="vertical"
 								padding={blockHeight * 0.125}>
 								<Text fontSize={21} fill={color}>
@@ -758,7 +781,7 @@ function PropertyMenuWidget() {
 							<AutoLayout // Segment Top Left Copy
 								width={blockWidth}
 								height={blockHeight * 0.5}
-								fill={fillColor}
+								fill={colors.fillColor}
 								direction="vertical"
 								padding={blockHeight * 0.1}>
 								<Text fontSize={24} fill={color}>
@@ -773,7 +796,7 @@ function PropertyMenuWidget() {
 										setTitle(e.characters);
 									}}
 									fontSize={40}
-									fill={titlecolor}
+									fill={colors.titleColor}
 									letterSpacing={-0.4}
 								/>
 							</AutoLayout>
@@ -783,7 +806,7 @@ function PropertyMenuWidget() {
 					<AutoLayout // Segment 2
 						width={blockWidth}
 						height={blockHeight}
-						fill={fillColor}
+						fill={colors.fillColor}
 						strokeWidth={ghostStroke}
 						strokeAlign="center"></AutoLayout>
 				</>
@@ -800,7 +823,7 @@ function PropertyMenuWidget() {
 							<AutoLayout // Segment Top Left Copy
 								width={blockWidth}
 								height={blockHeight * 0.5}
-								fill={fillColor}
+								fill={colors.fillColor}
 								direction="vertical"
 								padding={blockHeight * 0.125}>
 								<Text fontSize={21} fill={color}>
@@ -811,7 +834,7 @@ function PropertyMenuWidget() {
 							<AutoLayout // Segment Top Left Copy
 								width={blockWidth}
 								height={blockHeight * 0.5}
-								fill={fillColor}
+								fill={colors.fillColor}
 								direction="vertical"
 								padding={blockHeight * 0.1}>
 								<Text fontSize={24} fill={color}>
@@ -826,7 +849,7 @@ function PropertyMenuWidget() {
 										setTitle(e.characters);
 									}}
 									fontSize={40}
-									fill={titlecolor}
+									fill={colors.titleColor}
 									letterSpacing={-0.4}
 								/>
 							</AutoLayout>
@@ -846,7 +869,7 @@ function PropertyMenuWidget() {
 							<AutoLayout // Segment Top Left Copy
 								width={blockWidth}
 								height={blockHeight * 0.5}
-								fill={fillColor}
+								fill={colors.fillColor}
 								direction="vertical"
 								padding={blockHeight * 0.1}>
 								<Text fontSize={24} fill={color}>
@@ -861,7 +884,7 @@ function PropertyMenuWidget() {
 										setTitle(e.characters);
 									}}
 									fontSize={40}
-									fill={titlecolor}
+									fill={colors.titleColor}
 									letterSpacing={-0.4}
 								/>
 							</AutoLayout>
