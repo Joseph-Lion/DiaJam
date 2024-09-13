@@ -187,15 +187,21 @@ function PropertyMenuWidget() {
 		],
 		({ propertyName, propertyValue }) => {
 			if (propertyName === "colors") {
-				setColor(propertyValue);
+				if (propertyValue) {
+					setColor(propertyValue);
+				}
 				checkColor(propertyValue);
 			} else if (propertyName === "types") {
-				settype(propertyValue);
+				if (propertyValue) {
+					setType(propertyValue);
+				}
 			} else if (propertyName === "strokeColors") {
-				setStrokeColor(propertyValue);
+				if (propertyValue) {
+					setStrokeColor(propertyValue);
+				}
 				checkColor(propertyValue);
 			} else if (propertyName === "eventTypes") {
-				setEventType(propertyValue);
+				setEventType(propertyValue ?? "defaultEventType");
 			} else if (propertyName === "action") {
 				console.log(propertyName);
 			} else if (propertyName === 'toggleTheme') {
@@ -238,7 +244,7 @@ function PropertyMenuWidget() {
 								direction="vertical"
 								padding={blockHeight * 0.1}>
 								<Text fontSize={24} fill={color}>
-									{typeOptions.find((f) => f.option === type).label}
+									{typeOptions.find((f) => f.option === type)?.label || 'Unknown'}
 								</Text>
 
 								<Input // Title
@@ -276,7 +282,7 @@ function PropertyMenuWidget() {
 						fill={colors.textColor}
 						width={blockWidth * 3}
 						height={blockHeight}
-						padding={blockHeight * 0.125}
+
 						inputFrameProps={{
 							fill: colors.fillColor,
 							stroke: colors.ghostColor,
@@ -317,7 +323,7 @@ function PropertyMenuWidget() {
 								direction="vertical"
 								padding={blockHeight * 0.1}>
 								<Text fontSize={24} fill={color}>
-									{typeOptions.find((f) => f.option === type).label}
+									{typeOptions.find((f) => f.option === type)?.label}
 								</Text>
 
 								<Input // Title
@@ -360,7 +366,7 @@ function PropertyMenuWidget() {
 								direction="vertical"
 								padding={blockHeight * 0.1}>
 								<Text fontSize={24} fill={color}>
-									{typeOptions.find((f) => f.option === type).label}
+									{typeOptions.find((f) => f.option === type)?.label}
 								</Text>
 
 								<Input // Title
@@ -414,7 +420,7 @@ function PropertyMenuWidget() {
 								direction="vertical"
 								padding={blockHeight * 0.1}>
 								<Text fontSize={24} fill={color}>
-									{typeOptions.find((f) => f.option === type).label}
+								{typeOptions.find((f) => f.option === type)?.label || 'Unknown'}
 								</Text>
 
 								<Input // Title
@@ -444,7 +450,7 @@ function PropertyMenuWidget() {
 						fill={colors.textColor}
 						width={blockWidth * 2}
 						height={blockHeight * 2}
-						padding={blockHeight * 0.125}
+
 						inputFrameProps={{
 							fill: colors.fillColor,
 							stroke: colors.ghostColor,
@@ -485,7 +491,7 @@ function PropertyMenuWidget() {
 								direction="vertical"
 								padding={blockHeight * 0.1}>
 								<Text fontSize={24} fill={color}>
-									{typeOptions.find((f) => f.option === type).label}
+								{typeOptions.find((f) => f.option === type)?.label || 'Unknown'}
 								</Text>
 
 								<Input // Title
@@ -515,7 +521,7 @@ function PropertyMenuWidget() {
 						fill={colors.textColor}
 						width={blockWidth * 2}
 						height={blockHeight}
-						padding={blockHeight * 0.125}
+
 						inputFrameProps={{
 							fill: colors.fillColor,
 
@@ -555,7 +561,7 @@ function PropertyMenuWidget() {
 								direction="vertical"
 								padding={blockHeight * 0.1}>
 								<Text fontSize={24} fill={color}>
-									{typeOptions.find((f) => f.option === type).label}
+								{typeOptions.find((f) => f.option === type)?.label || 'Unknown'}
 								</Text>
 
 								<Input // Title
@@ -607,7 +613,7 @@ function PropertyMenuWidget() {
 								direction="vertical"
 								padding={blockHeight * 0.1}>
 								<Text fontSize={24} fill={color}>
-									{typeOptions.find((f) => f.option === type).label}
+								{typeOptions.find((f) => f.option === type)?.label || 'Unknown'}
 								</Text>
 
 								<Input // Title
@@ -642,7 +648,7 @@ function PropertyMenuWidget() {
 								direction="vertical"
 								padding={blockHeight * 0.1}>
 								<Text fontSize={24} fill={color}>
-									{typeOptions.find((f) => f.option === type).label}
+								{typeOptions.find((f) => f.option === type)?.label || 'Unknown'}
 								</Text>
 
 								<Input // Title
@@ -685,7 +691,7 @@ function PropertyMenuWidget() {
 								direction="vertical"
 								padding={blockHeight * 0.1}>
 								<Text fontSize={24} fill={color}>
-									{typeOptions.find((f) => f.option === type).label}
+								{typeOptions.find((f) => f.option === type)?.label || 'Unknown'}
 								</Text>
 
 								<Input // Title
@@ -731,7 +737,7 @@ function PropertyMenuWidget() {
 								direction="vertical"
 								padding={blockHeight * 0.1}>
 								<Text fontSize={24} fill={color}>
-									{typeOptions.find((f) => f.option === type).label}
+								{typeOptions.find((f) => f.option === type)?.label || 'Unknown'}
 								</Text>
 
 								<Input // Title
@@ -785,7 +791,7 @@ function PropertyMenuWidget() {
 								direction="vertical"
 								padding={blockHeight * 0.1}>
 								<Text fontSize={24} fill={color}>
-									{typeOptions.find((f) => f.option === type).label}
+								{typeOptions.find((f) => f.option === type)?.label || 'Unknown'}
 								</Text>
 
 								<Input // Title
@@ -838,7 +844,7 @@ function PropertyMenuWidget() {
 								direction="vertical"
 								padding={blockHeight * 0.1}>
 								<Text fontSize={24} fill={color}>
-									{typeOptions.find((f) => f.option === type).label}
+								{typeOptions.find((f) => f.option === type)?.label || 'Unknown'}
 								</Text>
 
 								<Input // Title
@@ -873,7 +879,7 @@ function PropertyMenuWidget() {
 								direction="vertical"
 								padding={blockHeight * 0.1}>
 								<Text fontSize={24} fill={color}>
-									{typeOptions.find((f) => f.option === type).label}
+								{typeOptions.find((f) => f.option === type)?.label || 'Unknown'}
 								</Text>
 
 								<Input // Title
@@ -892,8 +898,13 @@ function PropertyMenuWidget() {
 					</AutoLayout>
 				</>
 			)}
+			
 		</AutoLayout>
 	);
 }
 
 widget.register(PropertyMenuWidget);
+
+function checkColor(propertyValue: string | undefined) {
+	throw new Error("Function not implemented.");
+}
